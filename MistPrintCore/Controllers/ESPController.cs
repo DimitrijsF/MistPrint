@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using MistPrintCore.Helpers;
+using MistPrintCore.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,18 +17,34 @@ namespace MistPrintCore.Controllers
     {
         [HttpPost]
         [Route("status")]
-        public IHttpActionResult Beat(string json)
+        public IHttpActionResult Beat([FromBody] PrinterStatus data)
         {
             try
             {
+                StatusHelper.UpdateStatusFromESP(data);
+                PrintLogger.WriteLog("ESP Status received.", LoggerForServices.Logger.LogType.INFO);
                 return Ok();
             }
             catch (Exception ex)
             {
-                MainLogger.WriteLog("ESP Status parse error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                PrintLogger.WriteLog("ESP Status parse error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
                 return InternalServerError(ex);
             }
-            
+        }
+        [HttpPost]
+        [Route("report_error")]
+        public IHttpActionResult ReportError([FromBody] PrinterError data)
+        {
+            try
+            {
+                PrintLogger.WriteLog("Received printer error: " + data.Message, LoggerForServices.Logger.LogType.WARNING);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                PrintLogger.WriteLog("ESP error parsing printer error :) : " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                return InternalServerError(ex);
+            }
         }
     }
 }

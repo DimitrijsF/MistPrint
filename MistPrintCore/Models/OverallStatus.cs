@@ -39,5 +39,9 @@ namespace MistPrintCore.Models
                 return LastBeat.HasValue ? Convert.ToInt32((DateTime.Now - LastBeat.Value).TotalSeconds) : 0;
             }
         }
-    }
+        [JsonProperty("current_layer")]
+        public int CurrentLayer { get; set; }
+        [JsonProperty("total_layers")]
+        public int TotalLayers { get; set; }
+        }
 }

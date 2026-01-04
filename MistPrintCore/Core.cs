@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static MistPrintCore.Locals;
+using MistPrintCore.Timers;
+using MistPrintCore.Helpers;
 
 namespace MistPrintCore
 {
@@ -17,8 +19,10 @@ namespace MistPrintCore
             try
             {
                 MainLogger.WriteLog("Starting...", Logger.LogType.INFO);
+                FileSystemHelper.RefreshFileList();
                 _webApp = WebApp.Start<ApiConfig>("http://+:8089/");
                 MainLogger.WriteLog("PrintServer API started on port 8089", Logger.LogType.INFO);
+                BeatTimer.ProcessDelay();
             }
             catch (Exception ex)
             {

@@ -18,5 +18,7 @@ namespace MistPrintCore.Models
         public decimal TargetNozzleTemp { get; set; }
         [JsonProperty("target_bed_temp")]
         public decimal TargetBedTemp { get; set; }
+        [JsonProperty("layer")]
+        public int CurrentLayer { get; set; }
     }
 }
