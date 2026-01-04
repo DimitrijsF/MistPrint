@@ -64,5 +64,9 @@ namespace MistPrintCore.Helpers
                 return null;
             }
         }
+        public static void AbortPrint()
+        {
+            Locals.CurrentStatus.Status = Enums.Enums.DeviceStatus.ABORT;
+        }
     }
 }

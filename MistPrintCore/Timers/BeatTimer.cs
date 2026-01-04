@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using static MistPrintCore.Locals;
 using static MistPrintCore.Enums.Enums;
+using MistPrintCore.Helpers;
 
 namespace MistPrintCore.Timers
 {
@@ -19,14 +20,23 @@ namespace MistPrintCore.Timers
             timer.Elapsed += Timer_Elapsed;
             timer.AutoReset = true;
             timer.Enabled = true;
+            timer.Start();
         }
 
         private static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (CurrentStatus.Status == DeviceStatus.Printing && BeatIntervalSeconds > CurrentStatus.LastResponse)
+            if (BeatIntervalSeconds < CurrentStatus.LastResponse)
             {
-                Locals.MainLogger.WriteLog("No heartbeat received from printer in " + BeatIntervalSeconds + " seconds. Aborting print.", LoggerForServices.Logger.LogType.ERROR);
-                Locals.Core.AbortPrint();
+                if (CurrentStatus.Status != DeviceStatus.Offline && CurrentStatus.Status != DeviceStatus.Printing)
+                {
+                    MainLogger.WriteLog("No heartbeat received from printer in " + BeatIntervalSeconds + " seconds. Accepting disconnect.", LoggerForServices.Logger.LogType.WARNING);
+                    Locals.Core.ProcessDeviceDisconnect();
+                }
+                else if (CurrentStatus.Status == DeviceStatus.Printing)
+                {
+                    MainLogger.WriteLog("No heartbeat received from printer in " + BeatIntervalSeconds + " seconds. Aborting print.", LoggerForServices.Logger.LogType.ERROR);
+                    PrintHelper.AbortPrint();
+                }
             }
         }
     }

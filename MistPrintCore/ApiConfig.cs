@@ -1,6 +1,7 @@
 ﻿using Owin;
 using System.Globalization;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace MistPrintCore
 {
@@ -12,6 +13,13 @@ namespace MistPrintCore
 
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
             config.Formatters.JsonFormatter.SerializerSettings.Culture = CultureInfo.InvariantCulture;
+
+            var cors = new EnableCorsAttribute(
+            origins: "*", 
+            headers: "*",
+            methods: "*"
+   );
+            config.EnableCors(cors);
 
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute(

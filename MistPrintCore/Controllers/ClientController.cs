@@ -19,7 +19,7 @@ namespace MistPrintCore.Controllers
         {
             try
             {
-                return Ok(JsonConvert.SerializeObject(Locals.CurrentStatus));
+                return Ok(Locals.CurrentStatus);
             }
             catch (Exception ex)
             {

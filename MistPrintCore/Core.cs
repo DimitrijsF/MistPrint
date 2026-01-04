@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using static MistPrintCore.Locals;
 using MistPrintCore.Timers;
 using MistPrintCore.Helpers;
+using System.Runtime.InteropServices;
 
 namespace MistPrintCore
 {
@@ -36,9 +37,14 @@ namespace MistPrintCore
 
         }
 
-        public void AbortPrint()
+        public void ProcessDeviceDisconnect()
         {
-            CurrentStatus.Status = Enums.Enums.DeviceStatus.ABORT;
+            CurrentStatus.Status = Enums.Enums.DeviceStatus.Offline;
+            CurrentStatus.BedTemp = 0;
+            CurrentStatus.NozzleTemp = 0;
+            CurrentStatus.TargetNozzleTemp = 0;
+            CurrentStatus.TargetBedTemp = 0;
+            CurrentStatus.CurrentLayer = 0;
         }
     }
 }
