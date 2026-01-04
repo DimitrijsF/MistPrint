@@ -49,15 +49,21 @@ namespace MistPrintCore.Helpers
             ProcessFiles(path, currentDir);
             foreach (var dir in Directory.GetDirectories(path))
             {
-                var subDir = new Models.FileSystem.Directory()
+                var subDir = new FileSystem.Directory()
                 {
                     Name = new DirectoryInfo(dir).Name,
-                    Directories = new List<Models.FileSystem.Directory>(),
-                    Files = new List<Models.FileSystem.File>()
+                    Directories = new List<FileSystem.Directory>(),
+                    Files = new List<FileSystem.File>()
                 };
                 currentDir.Directories.Add(subDir);
                 ProcessDirectory(dir, subDir);
             }
+        }
+        public static List<string> ReadFileLines(string path)
+        {
+            List<string> lines = new List<string>();
+
+            return lines;
         }
     }
 }

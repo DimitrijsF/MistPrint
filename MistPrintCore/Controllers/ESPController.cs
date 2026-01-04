@@ -17,7 +17,7 @@ namespace MistPrintCore.Controllers
     {
         [HttpPost]
         [Route("status")]
-        public IHttpActionResult Beat([FromBody] PrinterStatus data)
+        public IHttpActionResult ProcessStatus([FromBody] PrinterStatus data)
         {
             try
             {
@@ -38,11 +38,58 @@ namespace MistPrintCore.Controllers
             try
             {
                 PrintLogger.WriteLog("Received printer error: " + data.Message, LoggerForServices.Logger.LogType.WARNING);
+                PrintHelper.HandlePrinterError(data.Message);
                 return Ok();
             }
             catch (Exception ex)
             {
                 PrintLogger.WriteLog("ESP error parsing printer error :) : " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                return InternalServerError(ex);
+            }
+        }
+        [HttpGet]
+        [Route("get_job")]
+        public IHttpActionResult GetJob()
+        {
+            try
+            {
+                if (CurrentStatus.Status == Enums.Enums.DeviceStatus.Starting && !string.IsNullOrEmpty(CurrentStatus.CurrentJob))
+                {
+                    if(Joblines != null && Joblines.Count > 0)
+                    {
+                        return Ok(JsonConvert.SerializeObject(PrintHelper.GetJoblines(StartLineCount)));
+                    }
+                    else
+                    {
+                        PrintLogger.WriteLog("Incorrect status and job lines!", LoggerForServices.Logger.LogType.WARNING);
+                        return StatusCode(System.Net.HttpStatusCode.NoContent);
+                    }
+                }
+                else
+                {
+                    return StatusCode(System.Net.HttpStatusCode.NoContent);
+                }
+            }
+            catch (Exception ex)
+            {
+                PrintLogger.WriteLog("Error sending job to ESP: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                return InternalServerError(ex);
+            }
+        }
+        [HttpGet]
+        [Route("get_lines")]
+        public IHttpActionResult GetLines()
+        {
+            try
+            {
+                if (CurrentStatus.Status == Enums.Enums.DeviceStatus.Printing)
+                    return Ok(JsonConvert.SerializeObject(PrintHelper.GetJoblines(LinePullCount)));
+                else
+                    return StatusCode(System.Net.HttpStatusCode.NoContent);
+            }
+            catch (Exception ex)
+            {
+                PrintLogger.WriteLog("Error sending lines to ESP: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
                 return InternalServerError(ex);
             }
         }

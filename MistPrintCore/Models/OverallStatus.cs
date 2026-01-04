@@ -43,5 +43,9 @@ namespace MistPrintCore.Models
         public int CurrentLayer { get; set; }
         [JsonProperty("total_layers")]
         public int TotalLayers { get; set; }
+        [JsonProperty("current_job")]
+        public string CurrentJob { get; set; }
+        [JsonProperty("error_message")]
+        public string ErrorMessage { get; set; }
         }
 }

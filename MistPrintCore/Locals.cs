@@ -13,10 +13,16 @@ namespace MistPrintCore
 {
     public class Locals
     {
+        #region constants
+        public const string FileDir = @"C:\MistPrint\Files\";
+        public const int StartLineCount = 50;
+        public const int LinePullCount = 50;
+        #endregion
         public static Core Core { get; set; } = new Core();
         public static Logger MainLogger { get; set; } = new Logger() { LogDir = @"C:\MistPrint\Logs\", DefaultFileName = "ServiceLog" };
-        public static Logger PrintLogger { get; set; } = new Logger() { LogDir = @"C:\MistPrint\Logs\", DefaultFileName = "PrintLog" };
-        public const string FileDir = @"C:\MistPrint\Files\";
+        public static Logger PrintLogger { get; set; } = new Logger() { LogDir = @"C:\MistPrint\Logs\", DefaultFileName = "PrintLog" }; 
+        public static List<string> Joblines { get; set; }
+        public static int NextLine { get; set; } = 0;
         public static OverallStatus CurrentStatus { get; set; } = new OverallStatus
         {
             NozzleTemp = 0,
@@ -28,12 +34,12 @@ namespace MistPrintCore
             CurrentLayer = 0,
             TotalLayers = 0
         };
-
-        public static Directory FileRoot = new Directory() 
+        public static Directory FileRoot { get; set; } = new Directory() 
         { 
             Name = "root",
             Directories = new List<Directory>(), 
             Files = new List<File>() 
         };
+        
     }
 }

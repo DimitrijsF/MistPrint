@@ -12,8 +12,9 @@ namespace MistPrintCore.Enums
         {
             Offline, 
             Idle,
+            Starting,
             Printing,
-            Paused,
+            Finishing,
             ERROR,
             ABORT
         }
