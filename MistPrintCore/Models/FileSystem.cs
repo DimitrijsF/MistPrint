@@ -15,6 +15,8 @@ namespace MistPrintCore.Models
         {
             [JsonProperty("Name")]
             public string Name { get; set; }
+            [JsonProperty("Path")]
+            public string Path { get; set; }
             [JsonProperty("Directories")]
             public List<Directory> Directories { get; set; }
             [JsonProperty("Files")]

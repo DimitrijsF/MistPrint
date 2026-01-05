@@ -23,7 +23,10 @@ namespace MistPrintCore.Controllers
             {
                 StatusHelper.UpdateStatusFromESP(data);
                 PrintLogger.WriteLog("ESP Status received.", LoggerForServices.Logger.LogType.INFO);
-                return Ok();
+                if(CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Stopping)
+                    return Ok("STOP");
+                else
+                    return Ok();
             }
             catch (Exception ex)
             {
@@ -53,11 +56,11 @@ namespace MistPrintCore.Controllers
         {
             try
             {
-                if (CurrentStatus.Status == Enums.Enums.DeviceStatus.Starting && !string.IsNullOrEmpty(CurrentStatus.CurrentJob))
+                if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Starting && CurrentStatus.CurrentJob != null)
                 {
                     if(Joblines != null && Joblines.Count > 0)
                     {
-                        return Ok(JsonConvert.SerializeObject(PrintHelper.GetJoblines(StartLineCount)));
+                        return Ok(PrintHelper.GetJoblines(StartLineCount));
                     }
                     else
                     {
@@ -82,8 +85,8 @@ namespace MistPrintCore.Controllers
         {
             try
             {
-                if (CurrentStatus.Status == Enums.Enums.DeviceStatus.Printing)
-                    return Ok(JsonConvert.SerializeObject(PrintHelper.GetJoblines(LinePullCount)));
+                if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Printing)
+                    return Ok(PrintHelper.GetJoblines(LinePullCount));
                 else
                     return StatusCode(System.Net.HttpStatusCode.NoContent);
             }

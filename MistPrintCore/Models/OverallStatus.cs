@@ -16,7 +16,7 @@ namespace MistPrintCore.Models
         [JsonProperty("target_bed_temp")]
         public decimal TargetBedTemp { get; set; }
         [JsonIgnore]
-        public DeviceStatus Status { get; set; }
+        public DeviceJobStatus Status { get; set; }
         [JsonProperty("status")]
         public string _status
         {
@@ -39,8 +39,16 @@ namespace MistPrintCore.Models
         public int CurrentLayer { get; set; }
         [JsonProperty("total_layers")]
         public int TotalLayers { get; set; }
+        [JsonIgnore]
+        public FileSystem.File CurrentJob { get; set; }
         [JsonProperty("current_job")]
-        public string CurrentJob { get; set; }
+        public string CurrentJobName
+        {
+            get
+            {
+                return CurrentJob != null ? CurrentJob.Name : "No job selected";
+            }
+        }
         [JsonProperty("error_message")]
         public string ErrorMessage { get; set; }
     }

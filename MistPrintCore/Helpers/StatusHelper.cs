@@ -17,9 +17,9 @@ namespace MistPrintCore.Helpers
             Locals.CurrentStatus.TargetBedTemp = data.TargetBedTemp;
             Locals.CurrentStatus.LastBeat = DateTime.Now;
             Locals.CurrentStatus.CurrentLayer = data.CurrentLayer;
-            if(Locals.CurrentStatus.Status == Enums.Enums.DeviceStatus.Offline)
+            if(Locals.CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Offline)
             {
-                Locals.CurrentStatus.Status = Enums.Enums.DeviceStatus.Idle;
+                Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
             }
         }
     }

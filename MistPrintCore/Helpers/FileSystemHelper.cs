@@ -19,6 +19,7 @@ namespace MistPrintCore.Helpers
                 Locals.FileRoot = new FileSystem.Directory()
                 {
                     Name = "root",
+                    Path = "/",
                     Directories = new List<FileSystem.Directory>()
                 };
                 ProcessDirectory(Locals.FileDir, Locals.FileRoot);                
@@ -52,6 +53,7 @@ namespace MistPrintCore.Helpers
                 var subDir = new FileSystem.Directory()
                 {
                     Name = new DirectoryInfo(dir).Name,
+                    Path = dir.Replace(Locals.FileDir, "/").Replace("\\", "/"),
                     Directories = new List<FileSystem.Directory>(),
                     Files = new List<FileSystem.File>()
                 };
@@ -63,7 +65,32 @@ namespace MistPrintCore.Helpers
         {
             List<string> lines = new List<string>();
 
+            using (StreamReader sr = new StreamReader(path))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if (line.StartsWith(";"))
+                    {
+                        if (line.StartsWith(";LAYER_COUNT")) // Process total layer count
+                            Locals.CurrentStatus.TotalLayers = Convert.ToInt32(line.Split(':').Last());
+                        else if (line.StartsWith(";LAYER:"))
+                            lines.Add(line);
+                        else
+                            continue;
+                    }
+                    else if(line.Trim().Length > 0)
+                        lines.Add(line);
+                }
+            }
+
             return lines;
+        }
+        public static void ProcessDeleteFile(FileRequest data)
+        {
+            File.Delete(Locals.FileDir + data.Path.Replace("/", "\\"));
+            Locals.CurrentStatus.CurrentJob = null;
+            RefreshFileList();
         }
     }
 }

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>MistPrint Monitor</title>
+	<link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: monospace;
+            background: #111;
+            color: #eee;
+            padding: 20px;
+        }
+
+        .row {
+            margin-bottom: 6px;
+        }
+
+        .label {
+            display: inline-block;
+            width: 180px;
+            color: #aaa;
+        }
+
+        .ok { color: #4caf50; }
+        .warn { color: #ff9800; }
+        .err { color: #f44336; }
+    </style>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<h2>MistPrint status</h2>
+
+<div id="status">
+    loading...
+</div>
+
+<div class="controls">
+    <button id="btn-start" class="btn start" onclick="startPrint()">START</button>
+    <button id="btn-stop" class="btn stop" onclick="stopPrint()">STOP</button>
+</div>
+
+<h3>Files</h3>
+
+<div id="file-manager">
+    <div id="files"></div>
+<br/>
+    <div class="buttons">
+        <input type="file" id="upload">
+        <button style="float:right" onclick="upload()">Upload</button>
+    </div>
+	<script src="app.js"></script>
+</div
+
+
+</body>
+</html>

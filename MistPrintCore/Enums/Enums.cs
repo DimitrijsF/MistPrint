@@ -8,12 +8,14 @@ namespace MistPrintCore.Enums
 {
     public class Enums
     {
-        public enum DeviceStatus
+        public enum DeviceJobStatus
         {
             Offline, 
             Idle,
+            Ready,
             Starting,
             Printing,
+            Stopping,
             Finishing,
             ERROR,
             ABORT

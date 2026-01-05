@@ -29,7 +29,7 @@ namespace MistPrintCore
             BedTemp = 0,
             TargetNozzleTemp = 0,
             TargetBedTemp = 0,
-            Status = DeviceStatus.Offline,
+            Status = DeviceJobStatus.Offline,
             LastBeat = null,
             CurrentLayer = 0,
             TotalLayers = 0

@@ -11,26 +11,33 @@ namespace MistPrintCore.Helpers
     {
         public static void HandlePrinterError(string message)
         {
-            Locals.CurrentStatus.Status = Enums.Enums.DeviceStatus.ERROR;
+            Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.ERROR;
             Locals.CurrentStatus.ErrorMessage = message;
         }
         public static void HandleInternalError(string message)
         {
             Locals.MainLogger.WriteLog("Internal print error: " + message, LoggerForServices.Logger.LogType.ERROR);
-            Locals.CurrentStatus.Status = Enums.Enums.DeviceStatus.ERROR;
+            Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.ERROR;
             Locals.Joblines = null;
             Locals.CurrentStatus.CurrentJob = null;
             Locals.NextLine = 0;
         }
-        public static void StartJob(FileSystem.File jobFile)
+        public static void StopJob()
+        {
+            Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+            Locals.Joblines = null;
+            Locals.CurrentStatus.CurrentJob = null;
+            Locals.NextLine = 0;
+            Locals.MainLogger.WriteLog("Print job stopped by user.", LoggerForServices.Logger.LogType.INFO);
+        }
+        public static void StartJob()
         {
             try
             {
-                Locals.Joblines = FileSystemHelper.ReadFileLines(Locals.FileDir + jobFile.Path.Replace("/", "\\"));
-                Locals.CurrentStatus.CurrentJob = jobFile.Name;
+                Locals.Joblines = FileSystemHelper.ReadFileLines(Locals.FileDir + Locals.CurrentStatus.CurrentJob.Path.Replace("/", "\\"));
                 Locals.NextLine = 0;
-                Locals.CurrentStatus.Status = Enums.Enums.DeviceStatus.Starting;
-                Locals.MainLogger.WriteLog("Starting print job: " + jobFile.Name, LoggerForServices.Logger.LogType.INFO);
+                Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Starting;
+                Locals.MainLogger.WriteLog("Starting print job: " + Locals.CurrentStatus.CurrentJob.Name, LoggerForServices.Logger.LogType.INFO);
             }
             catch (Exception ex)
             {
@@ -51,10 +58,10 @@ namespace MistPrintCore.Helpers
                 else
                 {
                     lines = Locals.Joblines.GetRange(Locals.NextLine, Locals.Joblines.Count - Locals.NextLine);
-                    Locals.CurrentStatus.Status = Enums.Enums.DeviceStatus.Finishing;
+                    Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Finishing;
                 }
-                if(Locals.CurrentStatus.Status == Enums.Enums.DeviceStatus.Starting)
-                    Locals.CurrentStatus.Status = Enums.Enums.DeviceStatus.Printing;
+                if(Locals.CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Starting)
+                    Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Printing;
                 return lines;
             }
             catch (Exception ex)
@@ -66,7 +73,7 @@ namespace MistPrintCore.Helpers
         }
         public static void AbortPrint()
         {
-            Locals.CurrentStatus.Status = Enums.Enums.DeviceStatus.ABORT;
+            Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.ABORT;
         }
     }
 }

@@ -1,0 +1,110 @@
+body {
+    font-family: monospace;
+    padding: 10px;
+}
+
+.row {
+    padding: 6px 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.row:hover {
+    background: #222;
+}
+.row.dir {
+    font-weight: bold;
+}
+
+.row.file {
+    padding-left: 16px;
+}
+.dir { font-weight: bold; }
+.file { }
+#files {
+    -webkit-overflow-scrolling: touch;
+}
+
+#files {
+    max-height: 320px;          /* ~10 строк */
+    overflow-y: auto;
+    border: 1px solid #444;
+    padding: 4px;
+    background: #111;
+}
+
+.ok { background: #cfc; }
+.err { background: #fcc; }
+#file-manager {
+    width: 40%;
+    max-width: 500px;   /* чтобы не расползалось */
+    min-width: 300px;
+}
+@media (max-width: 768px) {
+    #file-manager {
+        width: 100%;
+        max-width: none;
+        min-width: unset;
+    }
+}
+
+#status {
+    width: 40%;
+    max-width: 500px;   /* чтобы не расползалось */
+    min-width: 300px;
+}
+@media (max-width: 768px) {
+    #status {
+        width: 100%;
+        max-width: none;
+        min-width: unset;
+    }
+}
+.controls {
+	width: 40%;
+    max-width: 500px;   /* чтобы не расползалось */
+    min-width: 300px;
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.btn {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn.start {
+    background: #1f8f3a;
+    color: #fff;
+}
+
+.btn.stop {
+    background: #b02a2a;
+    color: #fff;
+}
+
+.btn:disabled {
+    background: #444;
+    color: #999;
+    cursor: not-allowed;
+}
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+		 width: 100%;
+		 max-width: none;
+        min-width: unset;
+    }
+}
+.ok {
+    color: #3ccf5e;
+    font-weight: bold;
+}

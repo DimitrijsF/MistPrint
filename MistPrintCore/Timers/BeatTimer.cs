@@ -12,7 +12,7 @@ namespace MistPrintCore.Timers
 {
     public class BeatTimer
     {
-        const int BeatIntervalSeconds = 15;
+        const int BeatIntervalSeconds = 15000;
         private static Timer timer;
         public static void ProcessDelay()
         {
@@ -27,12 +27,12 @@ namespace MistPrintCore.Timers
         {
             if (BeatIntervalSeconds < CurrentStatus.LastResponse)
             {
-                if (CurrentStatus.Status != DeviceStatus.Offline && CurrentStatus.Status != DeviceStatus.Printing)
+                if (CurrentStatus.Status != DeviceJobStatus.Offline && CurrentStatus.Status != DeviceJobStatus.Printing)
                 {
                     MainLogger.WriteLog("No heartbeat received from printer in " + BeatIntervalSeconds + " seconds. Accepting disconnect.", LoggerForServices.Logger.LogType.WARNING);
                     Locals.Core.ProcessDeviceDisconnect();
                 }
-                else if (CurrentStatus.Status == DeviceStatus.Printing)
+                else if (CurrentStatus.Status == DeviceJobStatus.Printing)
                 {
                     MainLogger.WriteLog("No heartbeat received from printer in " + BeatIntervalSeconds + " seconds. Aborting print.", LoggerForServices.Logger.LogType.ERROR);
                     PrintHelper.AbortPrint();

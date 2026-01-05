@@ -1,14 +1,10 @@
 ﻿using LoggerForServices;
 using Microsoft.Owin.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static MistPrintCore.Locals;
-using MistPrintCore.Timers;
 using MistPrintCore.Helpers;
-using System.Runtime.InteropServices;
+using MistPrintCore.Models;
+using MistPrintCore.Timers;
+using System;
+using static MistPrintCore.Locals;
 
 namespace MistPrintCore
 {
@@ -31,15 +27,17 @@ namespace MistPrintCore
                 throw;
             }
         }
-
         public void StartPrint()
         {
-
+            PrintHelper.StartJob();
         }
-
+        public void StopPrint()
+        {
+            PrintHelper.StopJob();
+        }
         public void ProcessDeviceDisconnect()
         {
-            CurrentStatus.Status = Enums.Enums.DeviceStatus.Offline;
+            CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Offline;
             CurrentStatus.BedTemp = 0;
             CurrentStatus.NozzleTemp = 0;
             CurrentStatus.TargetNozzleTemp = 0;
