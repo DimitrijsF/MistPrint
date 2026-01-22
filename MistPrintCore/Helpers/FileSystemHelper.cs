@@ -92,5 +92,29 @@ namespace MistPrintCore.Helpers
             Locals.CurrentStatus.CurrentJob = null;
             RefreshFileList();
         }
+        public static FileStream GetFirmwareStream()
+        {
+            if (string.IsNullOrEmpty(Locals.FirmawarePath))
+                return null;
+            return new FileStream(Locals.FirmawarePath, FileMode.Open, FileAccess.Read);
+        }
+        public static void SetJobFile(FileSystem.File file)
+        {
+            if (Locals.CurrentStatus.Status != Enums.Enums.DeviceJobStatus.Starting &&
+               Locals.CurrentStatus.Status != Enums.Enums.DeviceJobStatus.Printing &&
+               Locals.CurrentStatus.Status != Enums.Enums.DeviceJobStatus.Finishing)
+            {
+                Locals.CurrentStatus.CurrentJob = file;
+                if (Locals.CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Idle)
+                    Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Ready;
+            }
+        }
+        public static void ProcessUploadFile(string activeDir, string filePath)
+        {
+            byte[] buffer = File.ReadAllBytes(filePath);
+            string destination = Locals.FileDir + activeDir.TrimStart('/') + "\\" + filePath.Remove(0, filePath.LastIndexOf("\\") + 1);
+            File.WriteAllBytes(destination, buffer);
+            RefreshFileList();
+        }
     }
 }

@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MistPrintCore.Models
 {
@@ -20,5 +16,9 @@ namespace MistPrintCore.Models
         public decimal TargetBedTemp { get; set; }
         [JsonProperty("layer")]
         public int CurrentLayer { get; set; }
+        [JsonProperty("layer_time")]
+        public decimal LayerTime { get; set; }
+        [JsonProperty("esp_temp")]
+        public decimal EspTemp { get; set; }
     }
 }

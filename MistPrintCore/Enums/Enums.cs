@@ -18,7 +18,8 @@ namespace MistPrintCore.Enums
             Stopping,
             Finishing,
             ERROR,
-            ABORT
+            ABORT,
+            UPDATE
         }
     }
 }

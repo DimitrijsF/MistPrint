@@ -67,12 +67,7 @@ namespace MistPrintCore.Controllers
                     var file = dir.Files.Find(x => x.Path == data.Path.Remove(0, 1));
                     if (file == null)
                         return BadRequest("File not found.");
-                    if (Locals.CurrentStatus.Status != Enums.Enums.DeviceJobStatus.Starting &&
-                       Locals.CurrentStatus.Status != Enums.Enums.DeviceJobStatus.Printing &&
-                       Locals.CurrentStatus.Status != Enums.Enums.DeviceJobStatus.Finishing)
-                        Locals.CurrentStatus.CurrentJob = file;
-                    if (Locals.CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Idle)
-                        Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Ready;
+                    FileSystemHelper.SetJobFile((FileSystem.File)file);
                     return Ok();
                 }
                 else
@@ -148,7 +143,6 @@ namespace MistPrintCore.Controllers
                 var provider = new MultipartMemoryStreamProvider();
                 await Request.Content.ReadAsMultipartAsync(provider);
 
-                // путь
                 var pathPart = provider.Contents
                     .FirstOrDefault(c => c.Headers.ContentDisposition.Name.Trim('"') == "path");
 
@@ -156,7 +150,6 @@ namespace MistPrintCore.Controllers
                     ? await pathPart.ReadAsStringAsync()
                     : "/";
 
-                // файл
                 var filePart = provider.Contents
                     .FirstOrDefault(c => c.Headers.ContentDisposition.FileName != null);
 

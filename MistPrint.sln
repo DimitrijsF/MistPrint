@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MistPrintCore", "MistPrintC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerForServices", "LoggerForServices\LoggerForServices.csproj", "{3426A662-00F9-4C20-9981-90D9870F91FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestForms", "TestForms\TestForms.csproj", "{A63E8762-BE23-4D0F-A336-914F5D441AFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormService", "TestForms\FormService.csproj", "{A63E8762-BE23-4D0F-A336-914F5D441AFD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MistPrintUI", "MistPrintUI", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject

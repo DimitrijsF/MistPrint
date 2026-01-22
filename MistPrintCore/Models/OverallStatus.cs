@@ -15,6 +15,10 @@ namespace MistPrintCore.Models
         public decimal TargetNozzleTemp { get; set; }
         [JsonProperty("target_bed_temp")]
         public decimal TargetBedTemp { get; set; }
+        [JsonProperty("esp_temp")]
+        public decimal EspTempToClient { get { return Math.Round(EspTemp, 2, MidpointRounding.AwayFromZero); } } 
+        [JsonIgnore]
+        public decimal EspTemp { get; set; }
         [JsonIgnore]
         public DeviceJobStatus Status { get; set; }
         [JsonProperty("status")]
@@ -51,5 +55,9 @@ namespace MistPrintCore.Models
         }
         [JsonProperty("error_message")]
         public string ErrorMessage { get; set; }
+        [JsonIgnore]
+        public double TotalSeconds { get; set; }
+        [JsonProperty("total_time")]
+        public string TotalTime { get { return TimeSpan.FromSeconds(TotalSeconds).ToString(); } }
     }
 }

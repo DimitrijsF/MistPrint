@@ -12,7 +12,7 @@ namespace MistPrintCore.Timers
 {
     public class BeatTimer
     {
-        const int BeatIntervalSeconds = 15000;
+        const int BeatIntervalSeconds = 5;
         private static Timer timer;
         public static void ProcessDelay()
         {

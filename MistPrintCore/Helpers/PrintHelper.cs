@@ -13,6 +13,7 @@ namespace MistPrintCore.Helpers
         {
             Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.ERROR;
             Locals.CurrentStatus.ErrorMessage = message;
+            StopJob();
         }
         public static void HandleInternalError(string message)
         {
@@ -24,10 +25,14 @@ namespace MistPrintCore.Helpers
         }
         public static void StopJob()
         {
-            Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+            if (Locals.CurrentStatus.Status != Enums.Enums.DeviceJobStatus.ERROR && Locals.CurrentStatus.Status != Enums.Enums.DeviceJobStatus.ABORT)
+                Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Stopping;
             Locals.Joblines = null;
             Locals.CurrentStatus.CurrentJob = null;
             Locals.NextLine = 0;
+            Locals.CurrentStatus.CurrentLayer = 0;
+            Locals.CurrentStatus.TotalLayers = 0;
+            Locals.CurrentStatus.TotalSeconds = 0;
             Locals.MainLogger.WriteLog("Print job stopped by user.", LoggerForServices.Logger.LogType.INFO);
         }
         public static void StartJob()
@@ -74,6 +79,7 @@ namespace MistPrintCore.Helpers
         public static void AbortPrint()
         {
             Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.ABORT;
+            StopJob();
         }
     }
 }
