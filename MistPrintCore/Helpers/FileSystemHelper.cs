@@ -74,16 +74,29 @@ namespace MistPrintCore.Helpers
                     {
                         if (line.StartsWith(";LAYER_COUNT")) // Process total layer count
                             Locals.CurrentStatus.TotalLayers = Convert.ToInt32(line.Split(':').Last());
+                        else if (line.StartsWith(";TIME_ELAPSED"))
+                        {
+                            string timePart = line.Split(':').Last();
+                            decimal seconds;
+                            if(decimal.TryParse(timePart, out seconds))
+                                Locals.CurrentStatus.TotalSecondsGc = seconds;
+                            else if(decimal.TryParse(timePart.Replace('.',','), out seconds))
+                                Locals.CurrentStatus.TotalSecondsGc = seconds;
+
+                            lines.Add(line);
+                        }
                         else if (line.StartsWith(";LAYER:"))
                             lines.Add(line);
                         else
                             continue;
                     }
-                    else if(line.Trim().Length > 0)
+                    else if (line.Trim() == "M105")
+                        continue;
+                    else if (line.Trim().Length > 0)
                         lines.Add(line);
                 }
             }
-
+            File.WriteAllLines(@"C:\temp\gcode.gcode", lines.ToArray());
             return lines;
         }
         public static void ProcessDeleteFile(FileRequest data)

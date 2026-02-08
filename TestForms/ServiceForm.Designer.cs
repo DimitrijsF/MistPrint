@@ -34,8 +34,6 @@
             this.btnDelete = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panelStat = new System.Windows.Forms.Panel();
-            this.lblTime = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
             this.lblLayers = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.lblJobFile = new System.Windows.Forms.Label();
@@ -61,10 +59,21 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtFirm = new System.Windows.Forms.TextBox();
             this.lblUpdate = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.lblEstimate = new System.Windows.Forms.Label();
+            this.lblTotalGc = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.lblTimeReal = new System.Windows.Forms.Label();
+            this.lblTime = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.btRefresh = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panelStat.SuspendLayout();
             this.panelFiles.SuspendLayout();
             this.panelUpdate.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btInit
@@ -123,8 +132,6 @@
             // 
             // panelStat
             // 
-            this.panelStat.Controls.Add(this.lblTime);
-            this.panelStat.Controls.Add(this.label17);
             this.panelStat.Controls.Add(this.lblLayers);
             this.panelStat.Controls.Add(this.label15);
             this.panelStat.Controls.Add(this.lblJobFile);
@@ -143,28 +150,10 @@
             this.panelStat.TabIndex = 6;
             this.panelStat.Visible = false;
             // 
-            // lblTime
-            // 
-            this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(75, 173);
-            this.lblTime.Name = "lblTime";
-            this.lblTime.Size = new System.Drawing.Size(33, 13);
-            this.lblTime.TabIndex = 15;
-            this.lblTime.Text = "None";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(3, 173);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(33, 13);
-            this.label17.TabIndex = 14;
-            this.label17.Text = "Time:";
-            // 
             // lblLayers
             // 
             this.lblLayers.AutoSize = true;
-            this.lblLayers.Location = new System.Drawing.Point(76, 147);
+            this.lblLayers.Location = new System.Drawing.Point(104, 147);
             this.lblLayers.Name = "lblLayers";
             this.lblLayers.Size = new System.Drawing.Size(33, 13);
             this.lblLayers.TabIndex = 13;
@@ -182,7 +171,7 @@
             // lblJobFile
             // 
             this.lblJobFile.AutoSize = true;
-            this.lblJobFile.Location = new System.Drawing.Point(75, 121);
+            this.lblJobFile.Location = new System.Drawing.Point(103, 121);
             this.lblJobFile.Name = "lblJobFile";
             this.lblJobFile.Size = new System.Drawing.Size(33, 13);
             this.lblJobFile.TabIndex = 11;
@@ -209,7 +198,7 @@
             // lblEspTemp
             // 
             this.lblEspTemp.AutoSize = true;
-            this.lblEspTemp.Location = new System.Drawing.Point(75, 95);
+            this.lblEspTemp.Location = new System.Drawing.Point(103, 95);
             this.lblEspTemp.Name = "lblEspTemp";
             this.lblEspTemp.Size = new System.Drawing.Size(33, 13);
             this.lblEspTemp.TabIndex = 9;
@@ -218,7 +207,7 @@
             // lblLastSeen
             // 
             this.lblLastSeen.AutoSize = true;
-            this.lblLastSeen.Location = new System.Drawing.Point(75, 9);
+            this.lblLastSeen.Location = new System.Drawing.Point(103, 9);
             this.lblLastSeen.Name = "lblLastSeen";
             this.lblLastSeen.Size = new System.Drawing.Size(33, 13);
             this.lblLastSeen.TabIndex = 3;
@@ -245,7 +234,7 @@
             // lblBedTemp
             // 
             this.lblBedTemp.AutoSize = true;
-            this.lblBedTemp.Location = new System.Drawing.Point(75, 65);
+            this.lblBedTemp.Location = new System.Drawing.Point(103, 65);
             this.lblBedTemp.Name = "lblBedTemp";
             this.lblBedTemp.Size = new System.Drawing.Size(33, 13);
             this.lblBedTemp.TabIndex = 7;
@@ -254,7 +243,7 @@
             // lblNozzleTemp
             // 
             this.lblNozzleTemp.AutoSize = true;
-            this.lblNozzleTemp.Location = new System.Drawing.Point(75, 36);
+            this.lblNozzleTemp.Location = new System.Drawing.Point(103, 36);
             this.lblNozzleTemp.Name = "lblNozzleTemp";
             this.lblNozzleTemp.Size = new System.Drawing.Size(33, 13);
             this.lblNozzleTemp.TabIndex = 5;
@@ -272,7 +261,7 @@
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(81, 14);
+            this.lblStatus.Location = new System.Drawing.Point(110, 14);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(48, 13);
             this.lblStatus.TabIndex = 1;
@@ -344,7 +333,7 @@
             this.panelUpdate.Controls.Add(this.txtFirm);
             this.panelUpdate.Location = new System.Drawing.Point(547, 29);
             this.panelUpdate.Name = "panelUpdate";
-            this.panelUpdate.Size = new System.Drawing.Size(241, 380);
+            this.panelUpdate.Size = new System.Drawing.Size(241, 92);
             this.panelUpdate.TabIndex = 10;
             this.panelUpdate.Visible = false;
             // 
@@ -395,11 +384,110 @@
             this.lblUpdate.Text = "Firmware Update";
             this.lblUpdate.Visible = false;
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.lblEstimate);
+            this.panel2.Controls.Add(this.lblTotalGc);
+            this.panel2.Controls.Add(this.label10);
+            this.panel2.Controls.Add(this.label12);
+            this.panel2.Controls.Add(this.lblTimeReal);
+            this.panel2.Controls.Add(this.lblTime);
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Controls.Add(this.label17);
+            this.panel2.Location = new System.Drawing.Point(547, 127);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(241, 282);
+            this.panel2.TabIndex = 12;
+            // 
+            // lblEstimate
+            // 
+            this.lblEstimate.AutoSize = true;
+            this.lblEstimate.Location = new System.Drawing.Point(135, 80);
+            this.lblEstimate.Name = "lblEstimate";
+            this.lblEstimate.Size = new System.Drawing.Size(33, 13);
+            this.lblEstimate.TabIndex = 22;
+            this.lblEstimate.Text = "None";
+            // 
+            // lblTotalGc
+            // 
+            this.lblTotalGc.AutoSize = true;
+            this.lblTotalGc.Location = new System.Drawing.Point(134, 56);
+            this.lblTotalGc.Name = "lblTotalGc";
+            this.lblTotalGc.Size = new System.Drawing.Size(33, 13);
+            this.lblTotalGc.TabIndex = 23;
+            this.lblTotalGc.Text = "None";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(8, 80);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(89, 13);
+            this.label10.TabIndex = 20;
+            this.label10.Text = "Remaining (calc):";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(7, 56);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(77, 13);
+            this.label12.TabIndex = 21;
+            this.label12.Text = "Total time (gc):";
+            // 
+            // lblTimeReal
+            // 
+            this.lblTimeReal.AutoSize = true;
+            this.lblTimeReal.Location = new System.Drawing.Point(134, 34);
+            this.lblTimeReal.Name = "lblTimeReal";
+            this.lblTimeReal.Size = new System.Drawing.Size(33, 13);
+            this.lblTimeReal.TabIndex = 18;
+            this.lblTimeReal.Text = "None";
+            // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(133, 10);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(33, 13);
+            this.lblTime.TabIndex = 19;
+            this.lblTime.Text = "None";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 34);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(73, 13);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Time elapsed:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 10);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(94, 13);
+            this.label17.TabIndex = 17;
+            this.label17.Text = "Time elapsed (gc):";
+            // 
+            // btRefresh
+            // 
+            this.btRefresh.Location = new System.Drawing.Point(377, 415);
+            this.btRefresh.Name = "btRefresh";
+            this.btRefresh.Size = new System.Drawing.Size(75, 23);
+            this.btRefresh.TabIndex = 13;
+            this.btRefresh.Text = "Refresh";
+            this.btRefresh.UseVisualStyleBackColor = true;
+            this.btRefresh.Click += new System.EventHandler(this.btRefresh_Click);
+            // 
             // ServiceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btRefresh);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.lblUpdate);
             this.Controls.Add(this.panelUpdate);
             this.Controls.Add(this.btnStop);
@@ -414,6 +502,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "ServiceForm";
             this.Text = "MistPrint Service Form";
+            this.Shown += new System.EventHandler(this.ServiceForm_Shown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panelStat.ResumeLayout(false);
@@ -421,6 +510,8 @@
             this.panelFiles.ResumeLayout(false);
             this.panelUpdate.ResumeLayout(false);
             this.panelUpdate.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -447,8 +538,6 @@
         private System.Windows.Forms.Panel panelStat;
         private System.Windows.Forms.Label lblJobFile;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label lblTime;
-        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label lblLayers;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Panel panelFiles;
@@ -461,6 +550,16 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtFirm;
         private System.Windows.Forms.Label lblUpdate;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label lblEstimate;
+        private System.Windows.Forms.Label lblTotalGc;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label lblTimeReal;
+        private System.Windows.Forms.Label lblTime;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button btRefresh;
     }
 }
 

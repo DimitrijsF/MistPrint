@@ -15,8 +15,8 @@ namespace MistPrintCore
     {
         #region constants
         public const string FileDir = @"C:\MistPrint\Files\";
-        public const int StartLineCount = 250;
-        public const int LinePullCount = 200;
+        public const int StartLineCount = 500;
+        public const int LinePullCount = 250;
         #endregion
         public static Core Core { get; set; } = new Core();
         public static Logger MainLogger { get; set; } = new Logger() { LogDir = @"C:\MistPrint\Logs\", DefaultFileName = "ServiceLog" };
@@ -24,6 +24,7 @@ namespace MistPrintCore
         public static List<string> Joblines { get; set; }
         public static int NextLine { get; set; } = 0;
         public static string FirmawarePath { get; set; } = string.Empty;
+        public static string LastCommand { get; set; } = string.Empty;
         public static OverallStatus CurrentStatus { get; set; } = new OverallStatus
         {
             NozzleTemp = 0,
@@ -34,6 +35,11 @@ namespace MistPrintCore
             LastBeat = null,
             CurrentLayer = 0,
             TotalLayers = 0,
+            EspTemp = 0,
+            SpentSecondsGc = 0,
+            SpentSecondsReal = 0,
+            ErrorMessage = string.Empty,
+            TimeCoeficient = 1
         };
         public static Directory FileRoot { get; set; } = new Directory() 
         { 

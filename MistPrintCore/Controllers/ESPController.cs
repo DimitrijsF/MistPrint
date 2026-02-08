@@ -25,21 +25,39 @@ namespace MistPrintCore.Controllers
         {
             try
             {
-                //just set the printer status to send it to client apps
                 StatusHelper.UpdateStatusFromESP(data);
-                PrintLogger.WriteLog("ESP Status received.", LoggerForServices.Logger.LogType.INFO);
                 if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Stopping)
                 {
                     CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+                    LastCommand = "STOP";
                     return Ok("STOP");
                 }
                 else if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Starting)
-                    return Ok("START");
+                {
+                    if (LastCommand != "START")
+                    {
+                        LastCommand = "START";
+                        return Ok("START");
+                    }
+
+                    else
+                        return Ok();
+                }
                 else if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Finishing)
-                    return Ok("FINISH");
+                {
+                    if (Locals.LastCommand != "FINISH")
+                    {
+                        LastCommand = "FINISH";
+                        return Ok("FINISH");
+                    }
+                        
+                    else
+                        return Ok();
+                }
                 else if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.UPDATE)
                 {
                     CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+                    LastCommand = "UPDATE";
                     return Ok("UPDATE");
                 }
                 else
@@ -106,7 +124,7 @@ namespace MistPrintCore.Controllers
                 if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Printing)
                     return Ok(PrintHelper.GetJoblines(LinePullCount));
                 else
-                    return StatusCode(System.Net.HttpStatusCode.NoContent);
+                    return StatusCode(HttpStatusCode.NoContent);
             }
             catch (Exception ex)
             {
@@ -114,7 +132,7 @@ namespace MistPrintCore.Controllers
                 return InternalServerError(ex);
             }
         }
-        [HttpGet]
+        [HttpPost]
         [Route("finish_job")]
         public IHttpActionResult SetJobFinished()
         {

@@ -30,7 +30,7 @@ namespace MistPrintCore.Controllers
                 return InternalServerError(ex);
             }
         }
-        [HttpGet]
+        [HttpPost]
         [Route("get_files")]
         public IHttpActionResult GetFiles(string path)
         {
@@ -47,6 +47,35 @@ namespace MistPrintCore.Controllers
                 return InternalServerError(ex);
             }
         }
+        [HttpGet]
+        [Route("refresh_files")]
+        public IHttpActionResult RefreshFileList()
+        {
+            try
+            {
+                FileSystemHelper.RefreshFileList();
+                return Ok(Locals.FileRoot);
+            }
+            catch (Exception ex)
+            {
+                Locals.MainLogger.WriteLog("Client Get All Files error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                return InternalServerError(ex);
+            }
+        }
+        [HttpGet]
+        [Route("get_all_files")]
+        public IHttpActionResult GetAllFiles()
+        {
+            try
+            {
+                return Ok(Locals.FileRoot);
+            }
+            catch (Exception ex)
+            {
+                Locals.MainLogger.WriteLog("Client Get All Files error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                return InternalServerError(ex);
+            }
+        }
         [HttpPost]
         [Route("select_file")]
         public IHttpActionResult SelectFile([FromBody] FileRequest data)
@@ -55,18 +84,17 @@ namespace MistPrintCore.Controllers
             {
                 if (data.Path.ToLower().EndsWith(".gcode"))
                 {
-                    FileSystem.Directory dir = null;
-                    if (data.Path.Where(x => x == '/').Count() > 1)
-                    {
-                        dir = Locals.FileRoot.Directories.Find(x => x.Path == data.Path.Remove(data.Path.LastIndexOf("/")));
-                    }
-                    else
-                        dir = Locals.FileRoot;
+                    FileSystem.Directory dir = Locals.FileRoot;
+
+                    foreach (string part in data.Path.Split('/').Where(x => !x.ToLower().EndsWith(".gcode")))
+                        if (!string.IsNullOrEmpty(part))
+                            dir = dir.Directories.Find(x => x.Name == part);
+
                     if (dir == null)
-                        return BadRequest("Directory not found.");
+                        throw new Exception("Directory not found.");
                     var file = dir.Files.Find(x => x.Path == data.Path.Remove(0, 1));
                     if (file == null)
-                        return BadRequest("File not found.");
+                        throw new Exception("File not found.");
                     FileSystemHelper.SetJobFile((FileSystem.File)file);
                     return Ok();
                 }
@@ -79,7 +107,7 @@ namespace MistPrintCore.Controllers
                 return InternalServerError(ex);
             }
         }
-        [HttpPost]
+        [HttpGet]
         [Route("start_print")]
         public IHttpActionResult StartPrint()
         {
@@ -94,7 +122,7 @@ namespace MistPrintCore.Controllers
                 return InternalServerError(ex);
             }
         }
-        [HttpPost]
+        [HttpGet]
         [Route("stop_print")]
         public IHttpActionResult StopPrint()
         {

@@ -25,6 +25,7 @@ namespace MistPrintCore.Helpers
         }
         public static void StopJob()
         {
+            StatusHelper.StopRealTimer();
             if (Locals.CurrentStatus.Status != Enums.Enums.DeviceJobStatus.ERROR && Locals.CurrentStatus.Status != Enums.Enums.DeviceJobStatus.ABORT)
                 Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Stopping;
             Locals.Joblines = null;
@@ -32,7 +33,9 @@ namespace MistPrintCore.Helpers
             Locals.NextLine = 0;
             Locals.CurrentStatus.CurrentLayer = 0;
             Locals.CurrentStatus.TotalLayers = 0;
-            Locals.CurrentStatus.TotalSeconds = 0;
+            Locals.CurrentStatus.SpentSecondsGc = 0;
+            Locals.CurrentStatus.SpentSecondsReal = 0;
+            Locals.CurrentStatus.TotalSecondsGc = 0;
             Locals.MainLogger.WriteLog("Print job stopped by user.", LoggerForServices.Logger.LogType.INFO);
         }
         public static void StartJob()
@@ -42,6 +45,7 @@ namespace MistPrintCore.Helpers
                 Locals.Joblines = FileSystemHelper.ReadFileLines(Locals.FileDir + Locals.CurrentStatus.CurrentJob.Path.Replace("/", "\\"));
                 Locals.NextLine = 0;
                 Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Starting;
+                StatusHelper.StartRealTimer();
                 Locals.MainLogger.WriteLog("Starting print job: " + Locals.CurrentStatus.CurrentJob.Name, LoggerForServices.Logger.LogType.INFO);
             }
             catch (Exception ex)

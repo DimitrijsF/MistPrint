@@ -34,11 +34,16 @@ namespace TestForms
                     lblStatus.Text = Locals.CurrentStatus.Status.ToString();
                     lblBedTemp.Text = Locals.CurrentStatus.BedTemp.ToString() + " / " + Locals.CurrentStatus.TargetBedTemp;
                     lblNozzleTemp.Text = Locals.CurrentStatus.NozzleTemp.ToString() + " / " + Locals.CurrentStatus.TargetNozzleTemp;
-                    lblLayers.Text = Locals.CurrentStatus.CurrentLayer.ToString() + " / " + Locals.CurrentStatus.TotalLayers;
+                    lblLayers.Text = (Locals.CurrentStatus.CurrentLayer >= 0 ? Locals.CurrentStatus.CurrentLayer.ToString() : "0") + " / " + Locals.CurrentStatus.TotalLayers;
                     lblEspTemp.Text = Math.Round(Locals.CurrentStatus.EspTemp, 1, MidpointRounding.AwayFromZero).ToString();
                     lblJobFile.Text = Locals.CurrentStatus.CurrentJobName;
                     lblLastSeen.Text = Locals.CurrentStatus.LastResponse + " s";
-                    lblTime.Text = Locals.CurrentStatus.TotalTime;
+                    lblTime.Text = Locals.CurrentStatus.SpentTimeGc;
+                    lblTimeReal.Text = Locals.CurrentStatus.SpentTimeReal;
+                    lblTotalGc.Text = Locals.CurrentStatus.TotalSecondsGc + " s";
+
+                    lblEstimate.Text = Locals.CurrentStatus.RemainingTimeString;
+
                     panelStat.Visible = true;
                     panelFiles.Visible = true;
                     lblFiles.Visible = true;
@@ -128,6 +133,17 @@ namespace TestForms
                 Locals.CurrentStatus.Status = MistPrintCore.Enums.Enums.DeviceJobStatus.UPDATE;
                 Locals.FirmawarePath = txtFirm.Text;
             }
+        }
+
+        private void ServiceForm_Shown(object sender, EventArgs e)
+        {
+            logic.InitializeCore();
+            btInit.Enabled = false;
+        }
+
+        private void btRefresh_Click(object sender, EventArgs e)
+        {
+            logic.RefreshFiles();
         }
     }
 }

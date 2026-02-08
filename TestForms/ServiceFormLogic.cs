@@ -107,10 +107,12 @@ namespace FormService
         }
         public void UploadFile(string file, TreeNode activeNode)
         {
-            string path = activeNode.Tag.ToString();
+            string path = "/";
+            if (activeNode != null)
+                path = activeNode.Tag.ToString();
             FileSystem.Directory dir = Locals.FileRoot;
 
-            foreach (string part in path.Split('/').Where(x=> !x.ToLower().EndsWith(".gcode")))
+            foreach (string part in path.Split('/').Where(x => !x.ToLower().EndsWith(".gcode")))
                 if (!string.IsNullOrEmpty(part))
                     dir = dir.Directories.Find(x => x.Name == part);
 
@@ -120,6 +122,12 @@ namespace FormService
             FileSystemHelper.ProcessUploadFile(dir.Path, file);
             ProcessFilesToTree();
             //fileTree.Nodes.Find(activeNode.Name, true).FirstOrDefault()?.Expand();
+        }
+
+        public void RefreshFiles()
+        {
+            FileSystemHelper.RefreshFileList();
+            ProcessFilesToTree();
         }
     }
 }

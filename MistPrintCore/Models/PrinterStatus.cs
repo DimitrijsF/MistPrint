@@ -16,8 +16,8 @@ namespace MistPrintCore.Models
         public decimal TargetBedTemp { get; set; }
         [JsonProperty("layer")]
         public int CurrentLayer { get; set; }
-        [JsonProperty("layer_time")]
-        public decimal LayerTime { get; set; }
+        [JsonProperty("time")]
+        public float Time { get; set; }
         [JsonProperty("esp_temp")]
         public decimal EspTemp { get; set; }
     }
