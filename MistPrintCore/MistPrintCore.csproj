@@ -120,10 +120,11 @@
     <Compile Include="Helpers\PrintHelper.cs" />
     <Compile Include="Helpers\StatusHelper.cs" />
     <Compile Include="Models\FileSystem.cs" />
+    <Compile Include="Models\NvsLog.cs" />
     <Compile Include="Models\PrinterError.cs" />
     <Compile Include="Models\PrinterStatus.cs" />
     <Compile Include="Models\OverallStatus.cs" />
-    <Compile Include="Models\FileRequest.cs" />
+    <Compile Include="Models\RequestData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApiConfig.cs" />
     <Compile Include="Locals.cs" />

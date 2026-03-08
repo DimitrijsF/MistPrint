@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using static MistPrintCore.Locals;
 
 namespace MistPrintCore.Helpers
 {
@@ -13,19 +14,28 @@ namespace MistPrintCore.Helpers
         private static Timer RealTimer { get; set; } = null;
         public static void UpdateStatusFromESP(PrinterStatus data)
         {
-            Locals.CurrentStatus.NozzleTemp = data.NozzleTemp;
-            Locals.CurrentStatus.BedTemp = data.BedTemp;
-            Locals.CurrentStatus.TargetNozzleTemp = data.TargetNozzleTemp;
-            Locals.CurrentStatus.TargetBedTemp = data.TargetBedTemp;
-            Locals.CurrentStatus.LastBeat = DateTime.Now;
-            Locals.CurrentStatus.CurrentLayer = data.CurrentLayer;
-            Locals.CurrentStatus.EspTemp = data.EspTemp;
-            Locals.CurrentStatus.SpentSecondsGc = data.Time;
-            if (Locals.CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Offline)
+            CurrentStatus.NozzleTemp = data.NozzleTemp;
+            CurrentStatus.BedTemp = data.BedTemp;
+            CurrentStatus.TargetNozzleTemp = data.TargetNozzleTemp;
+            CurrentStatus.TargetBedTemp = data.TargetBedTemp;
+            CurrentStatus.LastBeat = DateTime.Now;
+            CurrentStatus.LayersDone = data.CurrentLayer;
+            CurrentStatus.EspTemp = data.EspTemp;
+            CurrentStatus.SpentSecondsGc = data.Time;
+            
+            if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Offline)
             {
-                Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+                CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
             }
-            CalculateCoeficient();
+            if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Printing)
+            {
+                if (CurrentStatus.LastLayersTimes.Count >= 5)
+                    CurrentStatus.LastLayersTimes.Remove(0);
+                if (CurrentStatus.LastLayerDoneTime.HasValue)
+                    CurrentStatus.LastLayersTimes.Add((DateTime.Now - CurrentStatus.LastLayerDoneTime.Value).TotalSeconds);
+                CurrentStatus.LastLayerDoneTime = DateTime.Now;
+                CalculateEstimateData();
+            }
         }
 
         public static void StartRealTimer()
@@ -33,7 +43,7 @@ namespace MistPrintCore.Helpers
             RealTimer = new Timer() { Interval = 1000 };
             RealTimer.Elapsed += (s, e) =>
             {
-                Locals.CurrentStatus.SpentSecondsReal++;
+                CurrentStatus.SpentSecondsReal++;
             };
             RealTimer.Start();
         }
@@ -45,17 +55,17 @@ namespace MistPrintCore.Helpers
             RealTimer.Stop();
             RealTimer.Dispose();
         }
-        public static void CalculateCoeficient()
+        public static void CalculateEstimateData()
         {
-            decimal coef = 1;
-            if (Locals.CurrentStatus.TotalLayers > 0 && Locals.CurrentStatus.SpentSecondsGc > 0 && Locals.CurrentStatus.SpentSecondsReal > 0)
+            if (CurrentStatus.TotalLayers > 0 && CurrentStatus.SpentSecondsGc > 0 && CurrentStatus.SpentSecondsReal > 0)
             {
-                decimal spentGc = Convert.ToDecimal(Locals.CurrentStatus.SpentSecondsGc);
-                decimal spentReal = Convert.ToDecimal(Locals.CurrentStatus.SpentSecondsReal);
+                decimal coef = 1;
+                decimal spentGc = Convert.ToDecimal(CurrentStatus.SpentSecondsGc);
+                decimal spentReal = Convert.ToDecimal(CurrentStatus.SpentSecondsReal);
 
                 coef = Math.Round(spentReal / spentGc);
+                CurrentStatus.TimeCoeficient = coef;
             }
-            Locals.CurrentStatus.TimeCoeficient = coef;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using LoggerForServices;
 using MistPrintCore.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -72,8 +73,8 @@ namespace MistPrintCore.Helpers
                 {
                     if (line.StartsWith(";"))
                     {
-                        if (line.StartsWith(";LAYER_COUNT")) // Process total layer count
-                            Locals.CurrentStatus.TotalLayers = Convert.ToInt32(line.Split(':').Last());
+                        if (line.StartsWith(";LAYER_COUNT") || line.StartsWith("; total layer number")) // Process total layer count
+                            Locals.CurrentStatus.TotalLayers = Convert.ToInt32(line.Split(':').Last().Trim());
                         else if (line.StartsWith(";TIME_ELAPSED"))
                         {
                             string timePart = line.Split(':').Last();
@@ -85,23 +86,27 @@ namespace MistPrintCore.Helpers
 
                             lines.Add(line);
                         }
-                        else if (line.StartsWith(";LAYER:"))
+                        else if (line.StartsWith(";LAYER:") || line.Trim() == ";LAYER_CHANGE")
                             lines.Add(line);
                         else
                             continue;
                     }
                     else if (line.Trim() == "M105")
                         continue;
-                    else if (line.Trim().Length > 0)
-                        lines.Add(line);
+                    else
+                    {
+                        string cleanLine = line.Split(';').First().Trim();
+                        if (!string.IsNullOrEmpty(cleanLine))
+                            lines.Add(cleanLine);
+                    }
                 }
             }
             File.WriteAllLines(@"C:\temp\gcode.gcode", lines.ToArray());
             return lines;
         }
-        public static void ProcessDeleteFile(FileRequest data)
+        public static void ProcessDeleteFile(RequestData data)
         {
-            File.Delete(Locals.FileDir + data.Path.Replace("/", "\\"));
+            File.Delete(Locals.FileDir + data.Data.Replace("/", "\\"));
             Locals.CurrentStatus.CurrentJob = null;
             RefreshFileList();
         }
@@ -128,6 +133,19 @@ namespace MistPrintCore.Helpers
             string destination = Locals.FileDir + activeDir.TrimStart('/') + "\\" + filePath.Remove(0, filePath.LastIndexOf("\\") + 1);
             File.WriteAllBytes(destination, buffer);
             RefreshFileList();
+        }
+        public static void SaveCriticalLogs(List<NvsLog> data)
+        {
+            string name = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt";
+            string path = Path.Combine(Locals.CriticalLogPath, name);
+            using (StreamWriter writer = new StreamWriter(path)) 
+            {
+                foreach (var log in data)
+                {
+                    writer.WriteLine(JsonConvert.SerializeObject(log));
+                }
+                writer.Close();
+            }
         }
     }
 }

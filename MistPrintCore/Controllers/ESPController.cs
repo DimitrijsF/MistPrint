@@ -1,17 +1,13 @@
 ﻿using MistPrintCore.Helpers;
 using MistPrintCore.Models;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Results;
 using static MistPrintCore.Locals;
 
 namespace MistPrintCore.Controllers
@@ -21,52 +17,92 @@ namespace MistPrintCore.Controllers
     {
         [HttpPost]
         [Route("status")]
-        public IHttpActionResult ProcessStatus([FromBody] PrinterStatus data)
+        public HttpResponseMessage ProcessStatus([FromBody] PrinterStatus data)
         {
             try
             {
                 StatusHelper.UpdateStatusFromESP(data);
-                if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Stopping)
+                switch (CurrentStatus.Status)
                 {
-                    CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
-                    LastCommand = "STOP";
-                    return Ok("STOP");
+                    case Enums.Enums.DeviceJobStatus.Stopping:
+                        CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+                        LastCommand = "STOP";
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("STOP", Encoding.UTF8, "text/plain")
+                        };
+                    case Enums.Enums.DeviceJobStatus.Starting:
+                        if (LastCommand != "START")
+                        {
+                            LastCommand = "START";
+                            return new HttpResponseMessage(HttpStatusCode.OK)
+                            {
+                                Content = new StringContent("START", Encoding.UTF8, "text/plain")
+                            };
+                        }
+                        break;
+                    case Enums.Enums.DeviceJobStatus.Finishing:
+                        if (LastCommand != "FINISH")
+                        {
+                            LastCommand = "FINISH";
+                            return new HttpResponseMessage(HttpStatusCode.OK)
+                            {
+                                Content = new StringContent("FINISH", Encoding.UTF8, "text/plain")
+                            };
+                        }
+                        break;
+                    case Enums.Enums.DeviceJobStatus.UPDATE:
+                        CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+                        LastCommand = "UPDATE";
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("UPDATE", Encoding.UTF8, "text /plain")
+                        };
+                    case Enums.Enums.DeviceJobStatus.BED:
+                        CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+                        LastCommand = "BED";
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("BED=" + BedToSet, Encoding.UTF8, "text/plain")
+                        };
+                    case Enums.Enums.DeviceJobStatus.NOZZLE:
+                        CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+                        LastCommand = "NOZZLE";
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("NOZZLE=" + NozzleToSet, Encoding.UTF8, "text/plain")
+                        };
+                    case Enums.Enums.DeviceJobStatus.FAN:
+                        CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+                        LastCommand = "FAN";
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("FAN=" + FanToSet, Encoding.UTF8, "text/plain")
+                        };
+                    case Enums.Enums.DeviceJobStatus.ZERO:
+                        CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
+                        LastCommand = "ZERO";
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("ZERO", Encoding.UTF8, "text/plain")
+                        };
+                    case Enums.Enums.DeviceJobStatus.DEBUG:
+                        if (LastCommand != "DEBUG")
+                        {
+                            LastCommand = "DEBUG";
+                            return new HttpResponseMessage(HttpStatusCode.OK)
+                            {
+                                Content = new StringContent("DEBUG", Encoding.UTF8, "text/plain")
+                            };
+                        }
+                        break;
                 }
-                else if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Starting)
-                {
-                    if (LastCommand != "START")
-                    {
-                        LastCommand = "START";
-                        return Ok("START");
-                    }
-
-                    else
-                        return Ok();
-                }
-                else if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Finishing)
-                {
-                    if (Locals.LastCommand != "FINISH")
-                    {
-                        LastCommand = "FINISH";
-                        return Ok("FINISH");
-                    }
-                        
-                    else
-                        return Ok();
-                }
-                else if (CurrentStatus.Status == Enums.Enums.DeviceJobStatus.UPDATE)
-                {
-                    CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Idle;
-                    LastCommand = "UPDATE";
-                    return Ok("UPDATE");
-                }
-                else
-                    return Ok();
+                return new HttpResponseMessage(HttpStatusCode.OK);
             }
             catch (Exception ex)
             {
                 PrintLogger.WriteLog("ESP Status parse error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
-                return InternalServerError(ex);
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
         }
         [HttpPost]
@@ -165,6 +201,28 @@ namespace MistPrintCore.Controllers
             response.Content.Headers.ContentLength = data.Length;
 
             return response;
+        }
+        [HttpPost]
+        [Route("err_logs")]
+        public IHttpActionResult SaveErrorLogs([FromBody] NvsLog[] data)
+        {
+            try
+            {
+                if (data != null && data.Length > 0)
+                {
+                    FileSystemHelper.SaveCriticalLogs(data.ToList());
+                    return Ok();
+                }
+                else {                     
+                    PrintLogger.WriteLog("No critical logs received from ESP", LoggerForServices.Logger.LogType.WARNING);
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+            }
+            catch (Exception ex)
+            {
+                PrintLogger.WriteLog("Error saving criticals logs from ESP: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                return InternalServerError(ex);
+            }
         }
     }
 }

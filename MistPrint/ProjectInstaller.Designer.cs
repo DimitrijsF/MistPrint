@@ -40,7 +40,7 @@
             // serviceInstaller1
             // 
             this.serviceInstaller1.Description = "Mist print service with APIs";
-            this.serviceInstaller1.ServiceName = "MistPrint";
+            this.serviceInstaller1.ServiceName = "MistPrintService";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller

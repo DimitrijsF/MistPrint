@@ -30,23 +30,7 @@ namespace MistPrintCore.Controllers
                 return InternalServerError(ex);
             }
         }
-        [HttpPost]
-        [Route("get_files")]
-        public IHttpActionResult GetFiles(string path)
-        {
-            try
-            {
-                if(path == "/")
-                    return Ok(Locals.FileRoot);
-                else
-                    return Ok(Locals.FileRoot.Directories.Find(x=> x.Path == path));
-            }
-            catch (Exception ex)
-            {
-                Locals.MainLogger.WriteLog("Client Get Files error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
-                return InternalServerError(ex);
-            }
-        }
+
         [HttpGet]
         [Route("refresh_files")]
         public IHttpActionResult RefreshFileList()
@@ -78,21 +62,21 @@ namespace MistPrintCore.Controllers
         }
         [HttpPost]
         [Route("select_file")]
-        public IHttpActionResult SelectFile([FromBody] FileRequest data)
+        public IHttpActionResult SelectFile([FromBody] RequestData data)
         {
             try
             {
-                if (data.Path.ToLower().EndsWith(".gcode"))
+                if (data.Data.ToLower().EndsWith(".gcode"))
                 {
                     FileSystem.Directory dir = Locals.FileRoot;
 
-                    foreach (string part in data.Path.Split('/').Where(x => !x.ToLower().EndsWith(".gcode")))
+                    foreach (string part in data.Data.Split('/').Where(x => !x.ToLower().EndsWith(".gcode")))
                         if (!string.IsNullOrEmpty(part))
                             dir = dir.Directories.Find(x => x.Name == part);
 
                     if (dir == null)
                         throw new Exception("Directory not found.");
-                    var file = dir.Files.Find(x => x.Path == data.Path.Remove(0, 1));
+                    var file = dir.Files.Find(x => x.Path == data.Data.Remove(0, 1));
                     if (file == null)
                         throw new Exception("File not found.");
                     FileSystemHelper.SetJobFile((FileSystem.File)file);
@@ -133,6 +117,7 @@ namespace MistPrintCore.Controllers
                     Locals.CurrentStatus.Status == Enums.Enums.DeviceJobStatus.Finishing)
                 {
                     Locals.Core.StopPrint();
+                    Locals.MainLogger.WriteLog("Print job stopped by user.", LoggerForServices.Logger.LogType.INFO);
                     return Ok();
                 }
                 else
@@ -145,63 +130,92 @@ namespace MistPrintCore.Controllers
             }
         }
         [HttpPost]
-        [Route("delete_file")]
-        public IHttpActionResult DeleteFile([FromBody] FileRequest data)
+        [Route("set_bed")]
+        public IHttpActionResult SetBedTemp([FromBody] RequestData data)
         {
             try
             {
-                FileSystemHelper.ProcessDeleteFile(data);
-                return Ok();
+                if (int.TryParse(data.Data, out int temp))
+                {
+                    Locals.Core.SetPrinterValue("BED", temp);
+                    return Ok();
+                }
+                else
+                    return BadRequest("Invalid temperature value.");
             }
             catch (Exception ex)
             {
-                Locals.MainLogger.WriteLog("Client Delete File error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                Locals.MainLogger.WriteLog("Client set bed temp error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
                 return InternalServerError(ex);
             }
         }
         [HttpPost]
-        [Route("upload_file")]
-        public async Task<IHttpActionResult> UploadFile()
+        [Route("set_nozzle")]
+        public IHttpActionResult SetNozzleTemp([FromBody] RequestData data)
         {
             try
             {
-                if (!Request.Content.IsMimeMultipartContent())
-                    return BadRequest("Unsupported media type");
-
-                var provider = new MultipartMemoryStreamProvider();
-                await Request.Content.ReadAsMultipartAsync(provider);
-
-                var pathPart = provider.Contents
-                    .FirstOrDefault(c => c.Headers.ContentDisposition.Name.Trim('"') == "path");
-
-                var path = pathPart != null
-                    ? await pathPart.ReadAsStringAsync()
-                    : "/";
-
-                var filePart = provider.Contents
-                    .FirstOrDefault(c => c.Headers.ContentDisposition.FileName != null);
-
-                if (filePart == null)
-                    return BadRequest("File missing");
-
-                var fileName = filePart.Headers.ContentDisposition.FileName.Trim('"');
-                var buffer = await filePart.ReadAsByteArrayAsync();
-
-                var targetDir = Path.Combine(
-                    Locals.FileDir,
-                    path.TrimStart('/')
-                );
-
-                Directory.CreateDirectory(targetDir);
-
-                var filePath = Path.Combine(targetDir, fileName);
-                File.WriteAllBytes(filePath, buffer);
-                FileSystemHelper.RefreshFileList();
+                if (int.TryParse(data.Data, out int temp))
+                {
+                    Locals.Core.SetPrinterValue("NOZZLE", temp);
+                    return Ok();
+                }
+                else
+                    return BadRequest("Invalid temperature value.");
+            }
+            catch (Exception ex)
+            {
+                Locals.MainLogger.WriteLog("Client set nozzle temp error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                return InternalServerError(ex);
+            }
+        }
+        [HttpPost]
+        [Route("set_fan")]
+        public IHttpActionResult SetFanTemp([FromBody] RequestData data)
+        {
+            try
+            {
+                if (int.TryParse(data.Data, out int temp))
+                {
+                    Locals.Core.SetPrinterValue("FAN", temp);
+                    return Ok();
+                }
+                else
+                    return BadRequest("Invalid speed value.");
+            }
+            catch (Exception ex)
+            {
+                Locals.MainLogger.WriteLog("Client set fan speed error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                return InternalServerError(ex);
+            }
+        }
+        [HttpGet]
+        [Route("set_zeros")]
+        public IHttpActionResult SetZeros()
+        {
+            try
+            {
+                Locals.Core.SetZero();
                 return Ok();
             }
             catch (Exception ex)
             {
-                Locals.MainLogger.WriteLog("Client Upload File error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                Locals.MainLogger.WriteLog("Client set all zeros error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
+                return InternalServerError(ex);
+            }
+        }
+        [HttpGet]
+        [Route("set_debug")]
+        public IHttpActionResult SetDebug()
+        {
+            try
+            {
+                Locals.Core.SetDebug();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Locals.MainLogger.WriteLog("Client set all zeros error: " + ex.Message, LoggerForServices.Logger.LogType.ERROR);
                 return InternalServerError(ex);
             }
         }

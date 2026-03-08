@@ -31,17 +31,21 @@ namespace ApiForms
         {
             base.OnShown(e);
             var treeRoot = await logic.GetInitialFilesList();
-            Action action = () =>
+            if (treeRoot != null)
             {
-                treeFiles.Nodes.Clear();
-                treeFiles.Nodes.Add(treeRoot);
-                treeFiles.ExpandAll();
-            };
-            if (InvokeRequired)
-                Invoke(action);
-            else
-                action();
-
+                Action action = () =>
+                {
+                    treeFiles.Nodes.Clear();
+                    treeFiles.Nodes.Add(treeRoot);
+                    treeFiles.CollapseAll();
+                    if (treeFiles.Nodes.Count > 0)
+                        treeFiles.Nodes[0].Expand();
+                };
+                if (InvokeRequired)
+                    Invoke(action);
+                else
+                    action();
+            }
         }
         public void UpdateStatus()
         {
@@ -58,14 +62,10 @@ namespace ApiForms
                     lblLastSeen.Text = logic.Status.LastResponse + " s";
                     lblEstimate.Text = logic.Status.RemainingTimeString;
                     lblElapsed.Text = logic.Status.SpentTimeReal;
-                    if(logic.Status.Status.ToLower() == "ready" && !string.IsNullOrEmpty(logic.Status.CurrentJobName))
-                        btnPrint.Enabled = true;
-                    else
-                        btnPrint.Enabled = false;
-                    if (logic.Status.Status.ToLower() == "printing" || logic.Status.Status.ToLower() == "finishing")
-                        btnStop.Enabled = true;
-                    else
-                        btnStop.Enabled = false;
+
+                    btnPrint.Enabled = logic.Status.Status.ToLower() == "ready" && !string.IsNullOrEmpty(logic.Status.CurrentJobName);
+                    btnStop.Enabled = logic.Status.Status.ToLower() == "printing" || logic.Status.Status.ToLower() == "finishing";
+                    panelPreheat.Enabled = logic.Status.Status.ToLower() == "ready" || logic.Status.Status.ToLower() == "idle";
                 };
                 if (InvokeRequired)
                     Invoke(action);
@@ -73,24 +73,24 @@ namespace ApiForms
                     action();
             }
         }
-        private async void treeFiles_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            await logic.SelectFile("/" + e.Node.Tag.ToString());
-        }
-
         private async void btRefresh_Click(object sender, EventArgs e)
         {
             var treeRoot = await logic.RefreshFiles();
-            Action action = () =>
+            if (treeRoot != null)
             {
-                treeFiles.Nodes.Clear();
-                treeFiles.Nodes.Add(treeRoot);
-                treeFiles.ExpandAll();
-            };
-            if (InvokeRequired)
-                Invoke(action);
-            else
-                action();
+                Action action = () =>
+                {
+                    treeFiles.Nodes.Clear();
+                    treeFiles.Nodes.Add(treeRoot);
+                    treeFiles.CollapseAll();
+                    if (treeFiles.Nodes.Count > 0)
+                        treeFiles.Nodes[0].Expand();
+                };
+                if (InvokeRequired)
+                    Invoke(action);
+                else
+                    action();
+            }
         }
 
         private async void btnPrint_Click(object sender, EventArgs e)
@@ -108,20 +108,34 @@ namespace ApiForms
                 await logic.StopPrint();
             }
         }
-
-        private void btnUpload_Click(object sender, EventArgs e)
+        private async void treeFiles_AfterSelect(object sender, TreeViewEventArgs e)
         {
-
+            await logic.SelectFile("/" + treeFiles.SelectedNode.Tag.ToString());
         }
 
-        private void btCreateDir_Click(object sender, EventArgs e)
+        private async void btAllZero_Click(object sender, EventArgs e)
         {
-
+            await logic.SetZeros();
         }
 
-        private void btnDelete_Click(object sender, EventArgs e)
+        private async void btSetNozzle_Click(object sender, EventArgs e)
         {
+            await logic.SetNozzleTemp(Convert.ToInt32(nozzleValue.Value));
+        }
 
+        private async void btSetBed_Click(object sender, EventArgs e)
+        {
+            await logic.SetBedTemp(Convert.ToInt32(bedValue.Value));
+        }
+
+        private async void btSetFan_Click(object sender, EventArgs e)
+        {
+            await logic.SetFanSpeed(Convert.ToInt32(fanValue.Value));
+        }
+
+        private async void btSetDebug_Click(object sender, EventArgs e)
+        {
+            await logic.SetDebug();
         }
     }
 }

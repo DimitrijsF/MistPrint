@@ -101,7 +101,7 @@ namespace FormService
         public void DeleteFileFromNode(TreeNode node)
         {
             string key = node.Text;
-            FileSystemHelper.ProcessDeleteFile(new FileRequest() { Path = node.Tag.ToString() });
+            FileSystemHelper.ProcessDeleteFile(new RequestData() { Data = node.Tag.ToString() });
             ProcessFilesToTree();
             //var a = fileTree.Nodes.Cast<TreeNode>().Where(x => x.Tag.ToString() == node.Tag.ToString().Remove(node.Tag.ToString().LastIndexOf("/"))).FirstOrDefault();
         }

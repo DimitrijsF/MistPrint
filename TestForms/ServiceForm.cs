@@ -34,7 +34,7 @@ namespace TestForms
                     lblStatus.Text = Locals.CurrentStatus.Status.ToString();
                     lblBedTemp.Text = Locals.CurrentStatus.BedTemp.ToString() + " / " + Locals.CurrentStatus.TargetBedTemp;
                     lblNozzleTemp.Text = Locals.CurrentStatus.NozzleTemp.ToString() + " / " + Locals.CurrentStatus.TargetNozzleTemp;
-                    lblLayers.Text = (Locals.CurrentStatus.CurrentLayer >= 0 ? Locals.CurrentStatus.CurrentLayer.ToString() : "0") + " / " + Locals.CurrentStatus.TotalLayers;
+                    lblLayers.Text = (Locals.CurrentStatus.LayersDone >= 0 ? Locals.CurrentStatus.LayersDone.ToString() : "0") + " / " + Locals.CurrentStatus.TotalLayers;
                     lblEspTemp.Text = Math.Round(Locals.CurrentStatus.EspTemp, 1, MidpointRounding.AwayFromZero).ToString();
                     lblJobFile.Text = Locals.CurrentStatus.CurrentJobName;
                     lblLastSeen.Text = Locals.CurrentStatus.LastResponse + " s";

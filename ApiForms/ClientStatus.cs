@@ -22,7 +22,7 @@ namespace ApiForms
         [JsonProperty("esp_temp")]
         public decimal EspTemp { get; set; }
         [JsonProperty("status")]
-        public string Status { get; set; }
+        public string Status { get; set; } = "Disconnected";
         [JsonProperty("last_active")]
         public int LastResponse { get; set; }
         [JsonProperty("current_layer")]

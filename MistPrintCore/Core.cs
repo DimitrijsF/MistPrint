@@ -35,6 +35,29 @@ namespace MistPrintCore
         {
             PrintHelper.StopJob();
         }
+        public void SetPrinterValue(string key, int value)
+        {
+            switch (key)
+            {
+                case "BED":
+                    PrintHelper.SetBed(value);
+                    break;
+                case "NOZZLE":
+                    PrintHelper.SetNozzle(value);
+                    break;
+                case "FAN":
+                    PrintHelper.SetFan(value);
+                    break;
+            }
+        }
+        public void SetZero()
+        {
+            PrintHelper.SetZero();
+        }
+        public void SetDebug()
+        {
+            PrintHelper.SetDebug();
+        }
         public void ProcessDeviceDisconnect()
         {
             CurrentStatus.Status = Enums.Enums.DeviceJobStatus.Offline;
@@ -42,7 +65,7 @@ namespace MistPrintCore
             CurrentStatus.NozzleTemp = 0;
             CurrentStatus.TargetNozzleTemp = 0;
             CurrentStatus.TargetBedTemp = 0;
-            CurrentStatus.CurrentLayer = 0;
+            CurrentStatus.LayersDone = 0;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using static MistPrintCore.Enums.Enums;
 
 namespace MistPrintCore.Models
@@ -43,8 +45,8 @@ namespace MistPrintCore.Models
         }
 
 
-        [JsonProperty("current_layer")]
-        public int CurrentLayer { get; set; }
+        [JsonProperty("layers_done")]
+        public int LayersDone { get; set; }
         [JsonProperty("total_layers")]
         public int TotalLayers { get; set; }
 
@@ -111,6 +113,10 @@ namespace MistPrintCore.Models
         }
         [JsonIgnore]
         public decimal TimeCoeficient { get; set; } = 1;
+        [JsonIgnore]
+        public List<double> LastLayersTimes { get; set; }
+        [JsonIgnore]
+        public DateTime? LastLayerDoneTime { get; set; }
         [JsonProperty("remaining_time")]
         public string RemainingTimeString
         {
@@ -118,11 +124,19 @@ namespace MistPrintCore.Models
             {
                 try
                 {
-                    if (SpentSecondsReal > 0 && SpentSecondsGc > 0 && CurrentLayer > 0)
+                    if (SpentSecondsReal > 0 && SpentSecondsGc > 0 && LayersDone > 0)
                     {
                         decimal seconds = TotalSecondsGc * TimeCoeficient;
-                        decimal layerSeconds = seconds - (seconds / TotalLayers * CurrentLayer);
+                        decimal layerSeconds = seconds - (seconds / TotalLayers * LayersDone);
                         TimeSpan remaining = TimeSpan.FromSeconds(Convert.ToDouble(layerSeconds));
+                        if (remaining.TotalMinutes > 0)
+                            return string.Format("{0:00}h {1:00}m", remaining.Hours, remaining.Minutes);
+                        else
+                            return "Less than a minute";
+                    }
+                    else if(SpentSecondsReal > 0 && LayersDone > 5)
+                    {
+                        TimeSpan remaining = TimeSpan.FromSeconds((TotalLayers - LayersDone) * (LastLayersTimes.Sum() / LastLayersTimes.Count));
                         if (remaining.TotalMinutes > 0)
                             return string.Format("{0:00}h {1:00}m", remaining.Hours, remaining.Minutes);
                         else

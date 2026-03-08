@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApiClientForm));
             this.lblEstimate = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.btnStop = new System.Windows.Forms.Button();
@@ -36,6 +37,18 @@
             this.treeFiles = new System.Windows.Forms.TreeView();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.panelPreheat = new System.Windows.Forms.Panel();
+            this.btAllZero = new System.Windows.Forms.Button();
+            this.btSetFan = new System.Windows.Forms.Button();
+            this.btSetBed = new System.Windows.Forms.Button();
+            this.fanValue = new System.Windows.Forms.NumericUpDown();
+            this.bedValue = new System.Windows.Forms.NumericUpDown();
+            this.nozzleValue = new System.Windows.Forms.NumericUpDown();
+            this.btSetNozzle = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.panelStat = new System.Windows.Forms.Panel();
             this.lblElapsed = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -53,13 +66,15 @@
             this.label9 = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnUpload = new System.Windows.Forms.Button();
             this.btnPrint = new System.Windows.Forms.Button();
-            this.btCreateDir = new System.Windows.Forms.Button();
             this.btRefresh = new System.Windows.Forms.Button();
+            this.btSetDebug = new System.Windows.Forms.Button();
             this.panelFiles.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.panelPreheat.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fanValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bedValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nozzleValue)).BeginInit();
             this.panelStat.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -87,7 +102,7 @@
             // 
             this.btnStop.Enabled = false;
             this.btnStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnStop.Location = new System.Drawing.Point(194, 417);
+            this.btnStop.Location = new System.Drawing.Point(292, 478);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 23);
             this.btnStop.TabIndex = 21;
@@ -99,7 +114,7 @@
             // 
             this.lblFiles.AutoSize = true;
             this.lblFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblFiles.Location = new System.Drawing.Point(290, 9);
+            this.lblFiles.Location = new System.Drawing.Point(380, 9);
             this.lblFiles.Name = "lblFiles";
             this.lblFiles.Size = new System.Drawing.Size(36, 16);
             this.lblFiles.TabIndex = 20;
@@ -109,9 +124,9 @@
             // 
             this.panelFiles.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelFiles.Controls.Add(this.treeFiles);
-            this.panelFiles.Location = new System.Drawing.Point(288, 31);
+            this.panelFiles.Location = new System.Drawing.Point(378, 31);
             this.panelFiles.Name = "panelFiles";
-            this.panelFiles.Size = new System.Drawing.Size(364, 380);
+            this.panelFiles.Size = new System.Drawing.Size(364, 441);
             this.panelFiles.TabIndex = 19;
             // 
             // treeFiles
@@ -119,7 +134,7 @@
             this.treeFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.treeFiles.Location = new System.Drawing.Point(3, 3);
             this.treeFiles.Name = "treeFiles";
-            this.treeFiles.Size = new System.Drawing.Size(354, 370);
+            this.treeFiles.Size = new System.Drawing.Size(354, 431);
             this.treeFiles.TabIndex = 0;
             this.treeFiles.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeFiles_AfterSelect);
             // 
@@ -136,13 +151,143 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.panelPreheat);
             this.panel1.Controls.Add(this.panelStat);
             this.panel1.Controls.Add(this.lblStatus);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Location = new System.Drawing.Point(14, 31);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(268, 380);
+            this.panel1.Size = new System.Drawing.Size(358, 441);
             this.panel1.TabIndex = 17;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(9, 284);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(54, 16);
+            this.label3.TabIndex = 27;
+            this.label3.Text = "Preheat";
+            // 
+            // panelPreheat
+            // 
+            this.panelPreheat.Controls.Add(this.btAllZero);
+            this.panelPreheat.Controls.Add(this.btSetFan);
+            this.panelPreheat.Controls.Add(this.btSetBed);
+            this.panelPreheat.Controls.Add(this.fanValue);
+            this.panelPreheat.Controls.Add(this.bedValue);
+            this.panelPreheat.Controls.Add(this.nozzleValue);
+            this.panelPreheat.Controls.Add(this.btSetNozzle);
+            this.panelPreheat.Controls.Add(this.label12);
+            this.panelPreheat.Controls.Add(this.label8);
+            this.panelPreheat.Controls.Add(this.label6);
+            this.panelPreheat.Enabled = false;
+            this.panelPreheat.Location = new System.Drawing.Point(6, 303);
+            this.panelPreheat.Name = "panelPreheat";
+            this.panelPreheat.Size = new System.Drawing.Size(345, 131);
+            this.panelPreheat.TabIndex = 7;
+            // 
+            // btAllZero
+            // 
+            this.btAllZero.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btAllZero.Location = new System.Drawing.Point(10, 98);
+            this.btAllZero.Name = "btAllZero";
+            this.btAllZero.Size = new System.Drawing.Size(148, 23);
+            this.btAllZero.TabIndex = 33;
+            this.btAllZero.Text = "All zeros";
+            this.btAllZero.UseVisualStyleBackColor = true;
+            this.btAllZero.Click += new System.EventHandler(this.btAllZero_Click);
+            // 
+            // btSetFan
+            // 
+            this.btSetFan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btSetFan.Location = new System.Drawing.Point(172, 71);
+            this.btSetFan.Name = "btSetFan";
+            this.btSetFan.Size = new System.Drawing.Size(75, 23);
+            this.btSetFan.TabIndex = 32;
+            this.btSetFan.Text = "Set";
+            this.btSetFan.UseVisualStyleBackColor = true;
+            this.btSetFan.Click += new System.EventHandler(this.btSetFan_Click);
+            // 
+            // btSetBed
+            // 
+            this.btSetBed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btSetBed.Location = new System.Drawing.Point(172, 45);
+            this.btSetBed.Name = "btSetBed";
+            this.btSetBed.Size = new System.Drawing.Size(75, 23);
+            this.btSetBed.TabIndex = 31;
+            this.btSetBed.Text = "Set";
+            this.btSetBed.UseVisualStyleBackColor = true;
+            this.btSetBed.Click += new System.EventHandler(this.btSetBed_Click);
+            // 
+            // fanValue
+            // 
+            this.fanValue.Location = new System.Drawing.Point(99, 71);
+            this.fanValue.Name = "fanValue";
+            this.fanValue.Size = new System.Drawing.Size(59, 20);
+            this.fanValue.TabIndex = 30;
+            // 
+            // bedValue
+            // 
+            this.bedValue.Location = new System.Drawing.Point(99, 45);
+            this.bedValue.Name = "bedValue";
+            this.bedValue.Size = new System.Drawing.Size(59, 20);
+            this.bedValue.TabIndex = 29;
+            // 
+            // nozzleValue
+            // 
+            this.nozzleValue.Location = new System.Drawing.Point(99, 19);
+            this.nozzleValue.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.nozzleValue.Name = "nozzleValue";
+            this.nozzleValue.Size = new System.Drawing.Size(59, 20);
+            this.nozzleValue.TabIndex = 28;
+            // 
+            // btSetNozzle
+            // 
+            this.btSetNozzle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btSetNozzle.Location = new System.Drawing.Point(172, 16);
+            this.btSetNozzle.Name = "btSetNozzle";
+            this.btSetNozzle.Size = new System.Drawing.Size(75, 23);
+            this.btSetNozzle.TabIndex = 27;
+            this.btSetNozzle.Text = "Set";
+            this.btSetNozzle.UseVisualStyleBackColor = true;
+            this.btSetNozzle.Click += new System.EventHandler(this.btSetNozzle_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label12.Location = new System.Drawing.Point(9, 71);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(72, 16);
+            this.label12.TabIndex = 26;
+            this.label12.Text = "Fan speed";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label8.Location = new System.Drawing.Point(9, 19);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(84, 16);
+            this.label8.TabIndex = 25;
+            this.label8.Text = "Nozzle temp.";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label6.Location = new System.Drawing.Point(9, 45);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(68, 16);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "Bed temp.";
             // 
             // panelStat
             // 
@@ -164,7 +309,7 @@
             this.panelStat.Controls.Add(this.label9);
             this.panelStat.Location = new System.Drawing.Point(6, 41);
             this.panelStat.Name = "panelStat";
-            this.panelStat.Size = new System.Drawing.Size(255, 258);
+            this.panelStat.Size = new System.Drawing.Size(345, 227);
             this.panelStat.TabIndex = 6;
             // 
             // lblElapsed
@@ -313,9 +458,9 @@
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lblStatus.Location = new System.Drawing.Point(115, 14);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(70, 16);
+            this.lblStatus.Size = new System.Drawing.Size(102, 16);
             this.lblStatus.TabIndex = 1;
-            this.lblStatus.Text = "Disabled";
+            this.lblStatus.Text = "Disconnected";
             // 
             // label2
             // 
@@ -327,33 +472,11 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Status:";
             // 
-            // btnDelete
-            // 
-            this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnDelete.Location = new System.Drawing.Point(577, 417);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 23);
-            this.btnDelete.TabIndex = 16;
-            this.btnDelete.Text = "Delete";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-            // 
-            // btnUpload
-            // 
-            this.btnUpload.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnUpload.Location = new System.Drawing.Point(288, 417);
-            this.btnUpload.Name = "btnUpload";
-            this.btnUpload.Size = new System.Drawing.Size(75, 23);
-            this.btnUpload.TabIndex = 15;
-            this.btnUpload.Text = "Upload";
-            this.btnUpload.UseVisualStyleBackColor = true;
-            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
-            // 
             // btnPrint
             // 
             this.btnPrint.Enabled = false;
             this.btnPrint.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnPrint.Location = new System.Drawing.Point(14, 417);
+            this.btnPrint.Location = new System.Drawing.Point(14, 478);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(75, 23);
             this.btnPrint.TabIndex = 14;
@@ -361,20 +484,10 @@
             this.btnPrint.UseVisualStyleBackColor = true;
             this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
-            // btCreateDir
-            // 
-            this.btCreateDir.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btCreateDir.Location = new System.Drawing.Point(369, 417);
-            this.btCreateDir.Name = "btCreateDir";
-            this.btCreateDir.Size = new System.Drawing.Size(105, 23);
-            this.btCreateDir.TabIndex = 25;
-            this.btCreateDir.Text = "Create folder";
-            this.btCreateDir.UseVisualStyleBackColor = true;
-            this.btCreateDir.Click += new System.EventHandler(this.btCreateDir_Click);
-            // 
             // btRefresh
             // 
-            this.btRefresh.Location = new System.Drawing.Point(496, 417);
+            this.btRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btRefresh.Location = new System.Drawing.Point(667, 478);
             this.btRefresh.Name = "btRefresh";
             this.btRefresh.Size = new System.Drawing.Size(75, 23);
             this.btRefresh.TabIndex = 26;
@@ -382,28 +495,43 @@
             this.btRefresh.UseVisualStyleBackColor = true;
             this.btRefresh.Click += new System.EventHandler(this.btRefresh_Click);
             // 
+            // btSetDebug
+            // 
+            this.btSetDebug.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btSetDebug.Location = new System.Drawing.Point(383, 478);
+            this.btSetDebug.Name = "btSetDebug";
+            this.btSetDebug.Size = new System.Drawing.Size(102, 23);
+            this.btSetDebug.TabIndex = 27;
+            this.btSetDebug.Text = "Set Debug";
+            this.btSetDebug.UseVisualStyleBackColor = true;
+            this.btSetDebug.Click += new System.EventHandler(this.btSetDebug_Click);
+            // 
             // ApiClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(664, 450);
+            this.ClientSize = new System.Drawing.Size(754, 513);
+            this.Controls.Add(this.btSetDebug);
             this.Controls.Add(this.btRefresh);
-            this.Controls.Add(this.btCreateDir);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.lblFiles);
             this.Controls.Add(this.panelFiles);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.btnUpload);
             this.Controls.Add(this.btnPrint);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ApiClientForm";
             this.Text = "MistPrint Client";
             this.Shown += new System.EventHandler(this.ApiClientForm_Shown);
             this.panelFiles.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panelPreheat.ResumeLayout(false);
+            this.panelPreheat.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fanValue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bedValue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nozzleValue)).EndInit();
             this.panelStat.ResumeLayout(false);
             this.panelStat.PerformLayout();
             this.ResumeLayout(false);
@@ -435,13 +563,23 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.Button btnUpload;
         private System.Windows.Forms.Button btnPrint;
-        private System.Windows.Forms.Button btCreateDir;
         private System.Windows.Forms.Label lblElapsed;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btRefresh;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel panelPreheat;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button btAllZero;
+        private System.Windows.Forms.Button btSetFan;
+        private System.Windows.Forms.Button btSetBed;
+        private System.Windows.Forms.NumericUpDown fanValue;
+        private System.Windows.Forms.NumericUpDown bedValue;
+        private System.Windows.Forms.NumericUpDown nozzleValue;
+        private System.Windows.Forms.Button btSetNozzle;
+        private System.Windows.Forms.Button btSetDebug;
     }
 }
 

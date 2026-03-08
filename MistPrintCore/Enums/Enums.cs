@@ -19,7 +19,12 @@ namespace MistPrintCore.Enums
             Finishing,
             ERROR,
             ABORT,
-            UPDATE
+            UPDATE,
+            BED,
+            NOZZLE,
+            ZERO,
+            FAN,
+            DEBUG
         }
     }
 }

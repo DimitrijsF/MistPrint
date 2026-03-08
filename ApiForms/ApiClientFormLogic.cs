@@ -54,12 +54,15 @@ namespace ApiForms
                 try
                 {
                     Status = Net.GetStatus();
-                    form.UpdateStatus();
-                    Thread.Sleep(1000);
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    Status = new ClientStatus() { Status = "Disconnected" };
+                }
+                finally
+                {
+                    form.UpdateStatus();
+                    Thread.Sleep(1000);
                 }
             }
         }
@@ -72,7 +75,12 @@ namespace ApiForms
             }
             catch (Exception ex)
             {
-                throw ex;
+                Status = new ClientStatus() { Status = "Disconnected" };
+                return null;
+            }
+            finally
+            {
+                form.UpdateStatus();            
             }
         }
         public async Task SelectFile(string path)
@@ -83,7 +91,11 @@ namespace ApiForms
             }
             catch (Exception ex)
             {
-                throw ex;
+                Status = new ClientStatus() { Status = "Disconnected" };
+            }
+            finally
+            {
+                form.UpdateStatus();
             }
         }
         public async Task StartPrint()
@@ -94,7 +106,11 @@ namespace ApiForms
             }
             catch (Exception ex)
             {
-                throw ex;
+                Status = new ClientStatus() { Status = "Disconnected" };
+            }
+            finally
+            {
+                form.UpdateStatus();
             }
         }
         public async Task StopPrint()
@@ -105,7 +121,11 @@ namespace ApiForms
             }
             catch (Exception ex)
             {
-                throw ex;
+                Status = new ClientStatus() { Status = "Disconnected" };
+            }
+            finally
+            {
+                form.UpdateStatus();
             }
         }
         public async Task<TreeNode> RefreshFiles()
@@ -117,7 +137,88 @@ namespace ApiForms
             }
             catch (Exception ex)
             {
-                throw ex;
+                Status = new ClientStatus() { Status = "Disconnected" };
+                return null;
+            }
+            finally
+            {
+                form.UpdateStatus();
+            }
+        }
+        public async Task SetBedTemp(int value)
+        {
+            try
+            {
+                await Net.SetPrinterValue("BED", value);
+            }
+            catch (Exception ex)
+            {
+                Status = new ClientStatus() { Status = "Disconnected" };
+
+            }
+            finally
+            {
+                form.UpdateStatus();
+            }
+        }
+        public async Task SetNozzleTemp(int value)
+        {
+            try
+            {
+                await Net.SetPrinterValue("NOZZLE", value);
+            }
+            catch (Exception ex)
+            {
+                Status = new ClientStatus() { Status = "Disconnected" };
+            }
+            finally
+            {
+                form.UpdateStatus();
+            }
+        }
+        public async Task SetFanSpeed(int value)
+        {
+            try
+            {
+                await Net.SetPrinterValue("FAN", value);
+            }
+            catch (Exception ex)
+            {
+                Status = new ClientStatus() { Status = "Disconnected" };
+            }
+            finally
+            {
+                form.UpdateStatus();
+            }
+        }
+        public async Task SetZeros()
+        {
+            try
+            {
+                await Net.SetZeros();
+            }
+            catch (Exception ex)
+            {
+                Status = new ClientStatus() { Status = "Disconnected" };
+            }
+            finally
+            {
+                form.UpdateStatus();
+            }
+        }
+        public async Task SetDebug()
+        {
+            try
+            {
+                await Net.SetDebug();
+            }
+            catch (Exception ex)
+            {
+                Status = new ClientStatus() { Status = "Disconnected" };
+            }
+            finally
+            {
+                form.UpdateStatus();
             }
         }
     }

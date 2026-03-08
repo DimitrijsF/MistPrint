@@ -1,4 +1,5 @@
 ﻿using MistPrintCore.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,12 +32,12 @@ namespace MistPrintCore.Helpers
             Locals.Joblines = null;
             Locals.CurrentStatus.CurrentJob = null;
             Locals.NextLine = 0;
-            Locals.CurrentStatus.CurrentLayer = 0;
+            Locals.CurrentStatus.LayersDone = 0;
             Locals.CurrentStatus.TotalLayers = 0;
             Locals.CurrentStatus.SpentSecondsGc = 0;
             Locals.CurrentStatus.SpentSecondsReal = 0;
             Locals.CurrentStatus.TotalSecondsGc = 0;
-            Locals.MainLogger.WriteLog("Print job stopped by user.", LoggerForServices.Logger.LogType.INFO);
+            
         }
         public static void StartJob()
         {
@@ -84,6 +85,32 @@ namespace MistPrintCore.Helpers
         {
             Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.ABORT;
             StopJob();
+            Locals.MainLogger.WriteLog("Print job is aborted.", LoggerForServices.Logger.LogType.INFO);
+        }
+        public static void SetBed(int value)
+        {
+            Locals.BedToSet = value;
+            Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.BED;
+        }
+        public static void SetNozzle(int value)
+        {
+            Locals.NozzleToSet = value;
+            Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.NOZZLE;
+        }
+        public static void SetFan(int value)
+        {
+            Locals.FanToSet = (value * 255) / 100;
+            if(Locals.FanToSet > 255)
+                Locals.FanToSet = 255;
+            Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.FAN;
+        }
+        public static void SetZero()
+        {
+            Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.ZERO;
+        }
+        public static void SetDebug()
+        {
+            Locals.CurrentStatus.Status = Enums.Enums.DeviceJobStatus.DEBUG;
         }
     }
 }
