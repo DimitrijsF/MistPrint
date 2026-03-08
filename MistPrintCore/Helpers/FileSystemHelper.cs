@@ -86,7 +86,7 @@ namespace MistPrintCore.Helpers
 
                             lines.Add(line);
                         }
-                        else if (line.StartsWith(";LAYER:") || line.Trim() == ";LAYER_CHANGE")
+                        else if (line.StartsWith(";LAYER:") || line.StartsWith(";LAYER_CHANGE"))
                             lines.Add(line);
                         else
                             continue;
